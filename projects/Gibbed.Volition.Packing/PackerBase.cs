@@ -44,7 +44,8 @@ namespace Gibbed.Volition.Packing
             TPackage package,
             IEnumerable<KeyValuePair<string, string>> paths,
             string outputPath,
-            bool ps3)
+            bool ps3,
+            bool extraPad) // extra padding for punisher files
         {
             var isCompressed = (package.Flags & Package.HeaderFlags.Compressed) != 0;
             var isCondensed = (package.Flags & Package.HeaderFlags.Condensed) != 0;
@@ -63,8 +64,7 @@ namespace Gibbed.Volition.Packing
             package.Entries.Clear();
             using (var output = File.Create(outputPath))
             {
-                if (isCondensed == true &&
-                    isCompressed == true)
+                if (isCondensed == true && isCompressed == true)
                 {
                     output.Seek(baseOffset, SeekOrigin.Begin);
 
@@ -107,9 +107,7 @@ namespace Gibbed.Volition.Packing
                     output.Seek(0, SeekOrigin.Begin);
                     package.Serialize(output);
                 }
-                else if (
-                    ps3 == true &&
-                    isCompressed == true)
+                else if (ps3 == true && isCompressed == true)
                 {
                     output.Seek(baseOffset, SeekOrigin.Begin);
 
@@ -280,6 +278,11 @@ namespace Gibbed.Volition.Packing
 
                             output.WriteFromStream(input, input.Length);
 
+                            if (extraPad == true)
+                            {
+                                entry.CompressedSize = entry.UncompressedSize; // the same in Punisher's vpps
+                            }
+
                             entry.CompressedSize = 0xFFFFFFFF;
                             offset += entry.UncompressedSize;
 
@@ -289,6 +292,17 @@ namespace Gibbed.Volition.Packing
 
                     package.CompressedSize = 0xFFFFFFFF;
                     package.UncompressedSize = (uint)offset;
+                }
+
+                // Extra padding after last file
+                if (extraPad == true)
+                {
+                    var lastPadding = offset.Align(2048) - offset;
+                    if (lastPadding > 0)
+                    {
+                        byte[] byteArr = new byte[lastPadding];
+                        output.Write(byteArr, 0, byteArr.Length);
+                    }
                 }
 
                 package.TotalSize = (uint)output.Length;

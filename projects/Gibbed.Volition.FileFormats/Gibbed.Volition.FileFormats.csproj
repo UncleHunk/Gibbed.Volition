@@ -85,6 +85,7 @@
     <Compile Include="InterfaceFile.cs" />
     <Compile Include="IPackageEntry.cs" />
     <Compile Include="IPackageFile.cs" />
+    <Compile Include="PackageFileV3Pun.cs" />
     <Compile Include="PackageFileV4.cs" />
     <Compile Include="PackageFileV6.cs" />
     <Compile Include="Package\Entry.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Package\HeaderFlagsV4.cs" />
     <Compile Include="Package\HeaderFlagsV6.cs" />
     <Compile Include="Package\HeaderV3.cs" />
+    <Compile Include="Package\HeaderV3Pun.cs" />
     <Compile Include="Package\HeaderV4.cs" />
     <Compile Include="Package\HeaderV6.cs" />
     <Compile Include="PackageFileV3.cs" />
