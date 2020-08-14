@@ -239,6 +239,17 @@ namespace Gibbed.Volition.Packing
 
                     package.CompressedSize = (uint)offset;
                     package.UncompressedSize = uncompressedSize;
+
+                    // Extra padding after last file
+                    if (extraPad == true)
+                    {
+                        var lastPadding = offset.Align(2048) - offset;
+                        if (lastPadding > 0)
+                        {
+                            byte[] byteArr = new byte[lastPadding];
+                            output.Write(byteArr, 0, byteArr.Length);
+                        }
+                    }
                 }
                 else
                 {
@@ -292,16 +303,16 @@ namespace Gibbed.Volition.Packing
 
                     package.CompressedSize = 0xFFFFFFFF;
                     package.UncompressedSize = (uint)offset;
-                }
 
-                // Extra padding after last file
-                if (extraPad == true)
-                {
-                    var lastPadding = offset.Align(2048) - offset;
-                    if (lastPadding > 0)
+                    // Extra padding after last file
+                    if (extraPad == true)
                     {
-                        byte[] byteArr = new byte[lastPadding];
-                        output.Write(byteArr, 0, byteArr.Length);
+                        var lastPadding = offset.Align(2048) - offset;
+                        if (lastPadding > 0)
+                        {
+                            byte[] byteArr = new byte[lastPadding];
+                            output.Write(byteArr, 0, byteArr.Length);
+                        }
                     }
                 }
 

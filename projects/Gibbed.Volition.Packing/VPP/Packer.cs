@@ -47,6 +47,8 @@ namespace Gibbed.Volition.Packing.VPP
             var isCondensed = false;
             var ps3 = false;
             var endian = Endian.Little;
+            var levelOrder = false;
+            var extraPad = false;
 
             var package = new TPackage();
             var options = new OptionSet();
@@ -97,7 +99,7 @@ namespace Gibbed.Volition.Packing.VPP
                 "pack data in big-endian mode",
                 v => endian = v != null ? Endian.Big : endian
             );
-            
+
             options.Add(
                 "v|verbose",
                 "enable verbose logging",
@@ -134,9 +136,14 @@ namespace Gibbed.Volition.Packing.VPP
                 options.WriteOptionDescriptions(Console.Out);
                 return 2;
             }
+            else
+            {
+                Console.WriteLine("Options: levelOrder is {0}", levelOrder.ToString());
+                Console.WriteLine("Options: compress is {0}", isCompressed.ToString());
+            }
 
             string outputPath;
-            var paths = new SortedDictionary<string, string>();
+            var paths = new Dictionary<string, string>();   // поменял с SortedDictionary
 
             if (extras.Count == 1)
             {
@@ -195,7 +202,7 @@ namespace Gibbed.Volition.Packing.VPP
             package.Flags = flags;
             package.ExtraFlags = extraFlags;
 
-            this.Build(package, paths, outputPath, ps3);
+            this.Build(package, paths, outputPath, ps3, extraPad);
             return 0;
         }
     }

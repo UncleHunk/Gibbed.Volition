@@ -50,12 +50,12 @@ namespace Gibbed.Volition.Packing.STR2
             {
                 {
                     "v|verbose",
-                    "enable verbose logging", 
+                    "enable verbose logging",
                     v => verbose = v != null
                 },
                 {
                     "h|help",
-                    "show this message and exit", 
+                    "show this message and exit",
                     v => showHelp = v != null
                 },
             };
@@ -151,7 +151,7 @@ namespace Gibbed.Volition.Packing.STR2
                 package.Flags = flags;
             }
 
-            this.Build(package, paths, outputPath, false);
+            this.Build(package, paths, outputPath, false, false);
 
             return 0;
         }
