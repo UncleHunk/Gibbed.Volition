@@ -48,7 +48,6 @@ namespace Gibbed.Volition.Packing.VPP
             var overwriteFiles = false;
             var ps3 = false;
             var verbose = false;
-            var levelOrder = false;
 
             var options = new OptionSet();
 
@@ -93,7 +92,7 @@ namespace Gibbed.Volition.Packing.VPP
                 return 1;
             }
 
-            if (extras.Count < 1 || extras.Count > 3 || showHelp == true)
+            if (extras.Count < 1 || extras.Count > 2 || showHelp == true)
             {
                 Console.WriteLine("Usage: {0} [OPTIONS]+ input_vpp [output_dir]", GetExecutableName());
                 Console.WriteLine("Unpack specified Volition package file.");
@@ -101,10 +100,6 @@ namespace Gibbed.Volition.Packing.VPP
                 Console.WriteLine("Options:");
                 options.WriteOptionDescriptions(Console.Out);
                 return 2;
-            }
-            else
-            {
-                Console.WriteLine("Options: levelOrder is {0}", levelOrder.ToString());
             }
 
             string inputPath = extras[0];
@@ -114,19 +109,14 @@ namespace Gibbed.Volition.Packing.VPP
 
             var previousNames = new Dictionary<string, long>();
 
-            Console.WriteLine("START");
-
             using (var input = File.OpenRead(inputPath))
             {
                 var package = new TPackage();
-                Console.WriteLine("begin Deserialize");
                 package.Deserialize(input);
 
                 long current = 0;
                 long total = package.Directory.Count();
-                var totalCompressed = 0;
 
-                Console.WriteLine("total: {0}", total.ToString());
                 if (total > 0)
                 {
                     Stream data = input;
@@ -135,9 +125,6 @@ namespace Gibbed.Volition.Packing.VPP
                     var dataOffset = package.DataOffset;
                     var isCompressed = (package.Flags & Package.HeaderFlags.Compressed) != 0;
                     var isCondensed = (package.Flags & Package.HeaderFlags.Condensed) != 0;
-
-                    Console.WriteLine("isCondensed: {0}", isCondensed.ToString());
-                    Console.WriteLine("isCompressed: {0}", isCompressed.ToString());
 
                     if (isCondensed == true && isCompressed == true)
                     {
@@ -271,8 +258,7 @@ namespace Gibbed.Volition.Packing.VPP
                         data.Close();
                     }
                 }
-                Console.WriteLine("Total compressed files {0}", totalCompressed.ToString());
-                Console.ReadLine();
+
                 return 0;
             }
         }

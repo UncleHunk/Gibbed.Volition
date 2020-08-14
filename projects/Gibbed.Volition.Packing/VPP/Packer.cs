@@ -47,8 +47,6 @@ namespace Gibbed.Volition.Packing.VPP
             var isCondensed = false;
             var ps3 = false;
             var endian = Endian.Little;
-            var levelOrder = false;
-            var extraPad = false;
 
             var package = new TPackage();
             var options = new OptionSet();
@@ -136,14 +134,9 @@ namespace Gibbed.Volition.Packing.VPP
                 options.WriteOptionDescriptions(Console.Out);
                 return 2;
             }
-            else
-            {
-                Console.WriteLine("Options: levelOrder is {0}", levelOrder.ToString());
-                Console.WriteLine("Options: compress is {0}", isCompressed.ToString());
-            }
 
             string outputPath;
-            var paths = new Dictionary<string, string>();   // поменял с SortedDictionary
+            var paths = new SortedDictionary<string, string>();
 
             if (extras.Count == 1)
             {
@@ -202,7 +195,7 @@ namespace Gibbed.Volition.Packing.VPP
             package.Flags = flags;
             package.ExtraFlags = extraFlags;
 
-            this.Build(package, paths, outputPath, ps3, extraPad);
+            this.Build(package, paths, outputPath, ps3, false);
             return 0;
         }
     }
